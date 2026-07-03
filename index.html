@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Online - Komputer & Masyarakat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Animasi transisi ringan */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <div id="app-container" class="p-4 md:p-8">
+        
+        <!-- ================= VIEW LOGIN ================= -->
+        <div id="login-view" class="min-h-[80vh] flex items-center justify-center fade-in">
+            <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                <h1 class="text-2xl font-bold mb-6 text-center text-blue-600">Login Ujian Online</h1>
+                <p class="text-gray-600 mb-6 text-center">Mata Kuliah: Komputer & Masyarakat</p>
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label for="nama" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                        <input type="text" id="nama" name="nama" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                        <label for="nim" class="block text-sm font-medium text-gray-700">NIM</label>
+                        <input type="text" id="nim" name="nim" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div>
+                        <label for="kelas" class="block text-sm font-medium text-gray-700">Kelas</label>
+                        <input type="text" id="kelas" name="kelas" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+                        Mulai Ujian
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= VIEW UJIAN ================= -->
+        <div id="exam-view" class="max-w-4xl mx-auto hidden fade-in">
+            <!-- Header User Info -->
+            <div class="bg-white p-4 rounded-lg shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center border-b-4 border-blue-500">
+                <div>
+                    <h2 id="header-user-name" class="text-lg font-bold text-gray-800">Nama (NIM)</h2>
+                    <p id="header-user-class" class="text-sm text-gray-500">Kelas: -</p>
+                </div>
+                <div class="mt-4 md:mt-0 text-right w-full md:w-auto">
+                    <p id="progress-text" class="text-sm font-medium text-gray-600 mb-1">Soal 1 dari 50</p>
+                    <div class="w-full md:w-48 bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 2%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Main Question Area -->
+                <div class="flex-grow bg-white p-6 rounded-lg shadow-sm h-fit">
+                    <h3 id="question-text" class="text-xl font-semibold mb-6 text-gray-800">
+                        1. Pertanyaan akan muncul di sini.
+                    </h3>
+                    
+                    <div id="options-container" class="space-y-3 mb-8">
+                        <!-- Opsi jawaban akan di-render menggunakan JavaScript -->
+                    </div>
+
+                    <!-- Tombol Navigasi Bawah -->
+                    <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
+                        <button id="btn-prev" class="px-6 py-2 rounded-md font-medium transition bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
+                            Sebelumnya
+                        </button>
+                        <button id="btn-next" class="px-6 py-2 rounded-md font-medium bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm hidden">
+                            Selanjutnya
+                        </button>
+                        <button id="btn-submit" class="px-6 py-2 rounded-md font-medium bg-green-600 text-white hover:bg-green-700 transition shadow-sm hidden">
+                            Selesai Ujian
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sidebar / Question Navigator -->
+                <div class="w-full md:w-64 bg-white p-4 rounded-lg shadow-sm h-fit shrink-0">
+                    <h4 class="font-semibold text-gray-700 mb-4 text-center border-b pb-2">Navigasi Soal</h4>
+                    <div id="navigator-grid" class="grid grid-cols-5 gap-2">
+                        <!-- Tombol angka soal akan di-render dengan JavaScript -->
+                    </div>
+                    <div class="mt-6 pt-4 border-t flex flex-col gap-2 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 bg-blue-100 border border-blue-200 rounded"></div>
+                            <span class="text-gray-600">Sudah Dijawab</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 bg-gray-100 border border-gray-200 rounded"></div>
+                            <span class="text-gray-600">Belum Dijawab</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= VIEW HASIL ================= -->
+        <div id="result-view" class="min-h-[80vh] flex items-center justify-center hidden fade-in">
+            <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl text-center">
+                <h1 class="text-3xl font-bold mb-4 text-green-600">Ujian Selesai!</h1>
+                <div class="bg-gray-50 p-6 rounded-lg mb-6 border border-gray-200 text-left">
+                    <h2 class="text-xl font-semibold mb-4 border-b pb-2">Data Mahasiswa</h2>
+                    <p><span class="font-medium w-24 inline-block">Nama</span>: <span id="res-nama"></span></p>
+                    <p><span class="font-medium w-24 inline-block">NIM</span>: <span id="res-nim"></span></p>
+                    <p><span class="font-medium w-24 inline-block">Kelas</span>: <span id="res-kelas"></span></p>
+                </div>
+                <div class="mb-8">
+                    <p class="text-lg text-gray-600 mb-2">Nilai Anda:</p>
+                    <p id="res-score" class="text-5xl font-bold text-blue-600">0</p>
+                    <p id="res-detail" class="text-sm text-gray-500 mt-2">(0 benar dari 50 soal)</p>
+                </div>
+                <button onclick="window.location.reload()" class="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">
+                    Keluar / Ulangi
+                </button>
+            </div>
+        </div>
+
+        <!-- Custom Modal untuk Konfirmasi -->
+        <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Selesaikan Ujian?</h3>
+                <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menyelesaikan ujian? Anda tidak dapat kembali setelah ini.</p>
+                <div class="flex justify-end gap-3">
+                    <button id="modal-cancel" class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition">Batal</button>
+                    <button id="modal-confirm" class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition">Ya, Selesai</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Soal Ujian (50 Soal)
+        const questions = [
+            { question: "Apa definisi dari 'Masyarakat Informasi'?", options: ["Masyarakat yang bergantung pada mesin industri.", "Masyarakat yang penciptaan, distribusi, dan manipulasi informasinya menjadi aktivitas ekonomi dan budaya yang signifikan.", "Masyarakat yang menolak penggunaan teknologi informasi.", "Masyarakat yang hanya menggunakan internet untuk hiburan."], answer: "Masyarakat yang penciptaan, distribusi, dan manipulasi informasinya menjadi aktivitas ekonomi dan budaya yang signifikan." },
+            { question: "Manakah dari berikut ini yang BUKAN merupakan dampak positif teknologi komputer dalam masyarakat?", options: ["Peningkatan efisiensi dalam pekerjaan.", "Kemudahan akses informasi.", "Peningkatan isolasi sosial.", "Kemajuan di bidang medis dan sains."], answer: "Peningkatan isolasi sosial." },
+            { question: "Apa yang dimaksud dengan 'Digital Divide' (Kesenjangan Digital)?", options: ["Perbedaan antara kecepatan komputer lama dan baru.", "Kesenjangan akses dan kemampuan menggunakan teknologi informasi antar individu atau kelompok.", "Proses mengubah sinyal analog menjadi digital.", "Jarak fisik antara dua komputer dalam sebuah jaringan."], answer: "Kesenjangan akses dan kemampuan menggunakan teknologi informasi antar individu atau kelompok." },
+            { question: "Apa salah satu masalah privasi utama yang muncul karena penggunaan internet dan media sosial?", options: ["Penyimpanan data yang terlalu aman.", "Pengumpulan dan penggunaan data pribadi tanpa izin.", "Sulitnya mencari teman baru.", "Berkurangnya jumlah spam email."], answer: "Pengumpulan dan penggunaan data pribadi tanpa izin." },
+            { question: "Apa peran utama undang-undang hak cipta (copyright) dalam dunia digital?", options: ["Mencegah penyebaran informasi secara bebas.", "Melindungi karya intelektual dari penyalinan dan distribusi ilegal.", "Memastikan semua perangkat lunak gratis untuk digunakan.", "Menghukum pembuat konten digital."], answer: "Melindungi karya intelektual dari penyalinan dan distribusi ilegal." },
+            { question: "Kejahatan dunia maya (cybercrime) yang melibatkan penipuan untuk mendapatkan informasi sensitif seperti kata sandi dan kartu kredit disebut:", options: ["Hacking", "Phishing", "Spamming", "Cyberbullying"], answer: "Phishing" },
+            { question: "Bagaimana e-commerce telah mengubah cara masyarakat berbelanja?", options: ["Membuat belanja menjadi lebih sulit dan mahal.", "Menghilangkan kebutuhan akan uang tunai secara keseluruhan.", "Memungkinkan pembelian barang secara online dengan kenyamanan dari rumah.", "Membatasi pilihan barang yang tersedia untuk konsumen."], answer: "Memungkinkan pembelian barang secara online dengan kenyamanan dari rumah." },
+            { question: "Apa dampak dari otomatisasi dan penggunaan robotik di tempat kerja?", options: ["Penciptaan lebih banyak pekerjaan manual.", "Penurunan produktivitas dan efisiensi.", "Penggantian pekerjaan rutin dengan mesin dan pergeseran kebutuhan keterampilan.", "Peningkatan biaya produksi secara drastis."], answer: "Penggantian pekerjaan rutin dengan mesin dan pergeseran kebutuhan keterampilan." },
+            { question: "Teleworking atau kerja jarak jauh menjadi mungkin karena adanya kemajuan dalam teknologi apa?", options: ["Teknologi pertanian", "Teknologi komunikasi dan jaringan komputer", "Teknologi mesin uap", "Teknologi pencetakan 3D"], answer: "Teknologi komunikasi dan jaringan komputer" },
+            { question: "Apa yang dimaksud dengan 'Cyberbullying'?", options: ["Bermain game online bersama teman.", "Bentuk perundungan atau pelecehan yang terjadi melalui platform digital.", "Berdiskusi dengan sopan di forum internet.", "Belajar menggunakan komputer di sekolah."], answer: "Bentuk perundungan atau pelecehan yang terjadi melalui platform digital." },
+            { question: "Penyebaran berita bohong atau informasi yang salah secara sengaja melalui internet dikenal sebagai:", options: ["E-learning", "Cybercrime", "Hoax atau disinformasi", "E-government"], answer: "Hoax atau disinformasi" },
+            { question: "Apa tujuan utama dari inisiatif E-Government?", options: ["Mengganti pemerintah dengan komputer.", "Meningkatkan efisiensi, transparansi, dan pelayanan publik menggunakan teknologi informasi.", "Menjual data warga negara ke perusahaan swasta.", "Membatasi akses warga negara terhadap layanan pemerintah."], answer: "Meningkatkan efisiensi, transparansi, dan pelayanan publik menggunakan teknologi informasi." },
+            { question: "Bagaimana teknologi informasi berdampak pada bidang pendidikan?", options: ["Menghilangkan kebutuhan akan guru.", "Membuat proses belajar menjadi lebih lambat.", "Memungkinkan e-learning dan akses materi pendidikan yang lebih luas.", "Membatasi interaksi antara siswa."], answer: "Memungkinkan e-learning dan akses materi pendidikan yang lebih luas." },
+            { question: "Apa fungsi utama dari enkripsi data?", options: ["Menghapus data secara permanen.", "Mempercepat proses transfer data.", "Mengubah data menjadi format yang tidak dapat dibaca untuk melindungi kerahasiaannya.", "Membagikan data secara publik."], answer: "Mengubah data menjadi format yang tidak dapat dibaca untuk melindungi kerahasiaannya." },
+            { question: "Hak atas kekayaan intelektual (HAKI) di bidang perangkat lunak meliputi:", options: ["Hanya hak paten.", "Hanya hak cipta.", "Hak cipta, paten, dan merek dagang.", "Tidak ada perlindungan hukum untuk perangkat lunak."], answer: "Hak cipta, paten, dan merek dagang." },
+            { question: "Perangkat lunak yang dapat digunakan, dimodifikasi, dan didistribusikan secara bebas oleh siapa saja disebut:", options: ["Freeware", "Shareware", "Open-source software", "Commercial software"], answer: "Open-source software" },
+            { question: "Apa itu 'Netiquette'?", options: ["Jaringan komputer khusus untuk etika.", "Aturan atau etika dalam berkomunikasi dan berinteraksi di internet.", "Perangkat keras untuk menjaga keamanan internet.", "Situs web tempat belajar sopan santun."], answer: "Aturan atau etika dalam berkomunikasi dan berinteraksi di internet." },
+            { question: "Apa dampak dari penggunaan media sosial yang berlebihan terhadap kesehatan mental?", options: ["Peningkatan konsentrasi dan fokus.", "Perasaan bahagia dan puas yang konstan.", "Potensi peningkatan kecemasan, depresi, dan FOMO (Fear Of Missing Out).", "Penurunan risiko masalah tidur."], answer: "Potensi peningkatan kecemasan, depresi, dan FOMO (Fear Of Missing Out)." },
+            { question: "Teknologi yang memungkinkan mesin untuk meniru kecerdasan manusia disebut:", options: ["Virtual Reality (VR)", "Artificial Intelligence (AI)", "Internet of Things (IoT)", "Cloud Computing"], answer: "Artificial Intelligence (AI)" },
+            { question: "Bagaimana konsep 'Internet of Things' (IoT) mempengaruhi kehidupan sehari-hari?", options: ["Menyebabkan semua perangkat elektronik menjadi lebih mahal.", "Menghubungkan berbagai perangkat fisik ke internet untuk saling berkomunikasi dan bertukar data.", "Membuat internet menjadi lebih lambat.", "Membatasi konektivitas internet hanya pada komputer dan smartphone."], answer: "Menghubungkan berbagai perangkat fisik ke internet untuk saling berkomunikasi dan bertukar data." },
+            { question: "Apa itu 'E-waste' atau limbah elektronik?", options: ["Email yang tidak diinginkan atau spam.", "Sampah berupa perangkat elektronik yang sudah tidak digunakan lagi.", "Sampah digital di dalam komputer.", "Energi yang terbuang saat menggunakan internet."], answer: "Sampah berupa perangkat elektronik yang sudah tidak digunakan lagi." },
+            { question: "Mengapa penting untuk memiliki kesadaran keamanan siber (cybersecurity awareness)?", options: ["Untuk bisa meretas komputer orang lain.", "Untuk melindungi diri dari ancaman cyber, pencurian data, dan serangan malware.", "Agar bisa menggunakan internet secara gratis.", "Untuk meningkatkan kecepatan internet."], answer: "Untuk melindungi diri dari ancaman cyber, pencurian data, dan serangan malware." },
+            { question: "Apa fungsi dari firewall dalam keamanan jaringan?", options: ["Membakar kabel jaringan yang rusak.", "Mencegah akses yang tidak sah ke atau dari jaringan pribadi.", "Mempercepat koneksi internet.", "Membersihkan virus dari komputer."], answer: "Mencegah akses yang tidak sah ke atau dari jaringan pribadi." },
+            { question: "Apa itu 'Big Data'?", options: ["Komputer dengan ukuran yang sangat besar.", "Himpunan data yang sangat besar dan kompleks yang sulit diproses dengan metode tradisional.", "Ruang penyimpanan yang besar di hard drive.", "Biaya penggunaan internet yang tinggi."], answer: "Himpunan data yang sangat besar dan kompleks yang sulit diproses dengan metode tradisional." },
+            { question: "Apa itu 'Cloud Computing'?", options: ["Menggunakan komputer saat cuaca berawan.", "Penyampaian layanan komputasi (server, penyimpanan, database) melalui internet.", "Menyimpan data di dalam flash drive.", "Bermain game di atas awan."], answer: "Penyampaian layanan komputasi (server, penyimpanan, database) melalui internet." },
+            { question: "Bentuk kejahatan siber di mana pelaku mengunci akses ke data korban dan meminta tebusan untuk membukanya disebut:", options: ["Spyware", "Adware", "Ransomware", "Trojan Horse"], answer: "Ransomware" },
+            { question: "Apa keuntungan utama dari menggunakan perangkat lunak kolaborasi seperti Google Workspace atau Microsoft 365?", options: ["Hanya bisa digunakan secara offline.", "Memungkinkan beberapa orang bekerja pada dokumen yang sama secara bersamaan dari lokasi berbeda.", "Hanya bisa digunakan oleh satu orang pada satu waktu.", "Membutuhkan perangkat keras yang sangat mahal."], answer: "Memungkinkan beberapa orang bekerja pada dokumen yang sama secara bersamaan dari lokasi berbeda." },
+            { question: "Apa peran dari algoritma dalam konteks media sosial?", options: ["Menghitung biaya langganan pengguna.", "Menentukan konten apa yang ditampilkan kepada pengguna berdasarkan minat dan perilaku mereka.", "Menyembunyikan konten dari semua pengguna.", "Memperbaiki perangkat keras server."], answer: "Menentukan konten apa yang ditampilkan kepada pengguna berdasarkan minat dan perilaku mereka." },
+            { question: "Apa itu 'Virtual Reality' (VR)?", options: ["Kenyataan yang tidak bisa dilihat.", "Simulasi komputer yang menciptakan lingkungan tiga dimensi yang dapat berinteraksi dengan pengguna.", "Menonton video di layar datar.", "Mendengarkan musik melalui headphone."], answer: "Simulasi komputer yang menciptakan lingkungan tiga dimensi yang dapat berinteraksi dengan pengguna." },
+            { question: "Apa perbedaan antara Virtual Reality (VR) dan Augmented Reality (AR)?", options: ["VR dan AR adalah hal yang sama.", "VR menambahkan elemen digital ke dunia nyata, AR menciptakan lingkungan maya sepenuhnya.", "VR menciptakan lingkungan maya sepenuhnya, AR menambahkan elemen digital ke dunia nyata.", "VR hanya untuk game, AR hanya untuk pendidikan."], answer: "VR menciptakan lingkungan maya sepenuhnya, AR menambahkan elemen digital ke dunia nyata." },
+            { question: "Teknologi yang mendasari mata uang kripto seperti Bitcoin adalah:", options: ["Cloud Computing", "Artificial Intelligence", "Blockchain", "Virtual Reality"], answer: "Blockchain" },
+            { question: "Apa prinsip dasar dari teknologi Blockchain?", options: ["Sistem penyimpanan data terpusat pada satu server.", "Buku besar digital yang terdesentralisasi dan tidak dapat diubah.", "Sistem pembayaran yang hanya bisa digunakan secara tunai.", "Jaringan komputer yang sangat lambat."], answer: "Buku besar digital yang terdesentralisasi dan tidak dapat diubah." },
+            { question: "Apa dampak teknologi terhadap industri musik dan film?", options: ["Menurunkan kualitas karya secara keseluruhan.", "Membuat distribusi karya menjadi sangat sulit.", "Mengubah cara distribusi dan konsumsi karya dari fisik menjadi digital/streaming.", "Mengembalikan industri ke era piringan hitam dan kaset."], answer: "Mengubah cara distribusi dan konsumsi karya dari fisik menjadi digital/streaming." },
+            { question: "Kecanduan internet merupakan salah satu masalah sosial yang muncul akibat teknologi. Apa ciri utamanya?", options: ["Menggunakan internet hanya saat diperlukan.", "Ketidakmampuan mengontrol penggunaan internet hingga mengganggu aktivitas sehari-hari.", "Membenci semua jenis perangkat teknologi.", "Selalu mematikan komputer setelah selesai digunakan."], answer: "Ketidakmampuan mengontrol penggunaan internet hingga mengganggu aktivitas sehari-hari." },
+            { question: "Dalam konteks komputer dan masyarakat, apa itu 'Green Computing'?", options: ["Menggunakan komputer yang berwarna hijau.", "Praktik menggunakan sumber daya komputasi secara efisien dan ramah lingkungan.", "Membuang komputer ke hutan.", "Bermain game tentang alam."], answer: "Praktik menggunakan sumber daya komputasi secara efisien dan ramah lingkungan." },
+            { question: "Apa yang dimaksud dengan 'Doxxing'?", options: ["Tindakan mencari dan menyebarkan informasi pribadi seseorang di internet dengan niat jahat.", "Memberikan donasi secara online.", "Menggunakan dokumen (docs) untuk keperluan sekolah.", "Menghapus data pribadi dari internet."], answer: "Tindakan mencari dan menyebarkan informasi pribadi seseorang di internet dengan niat jahat." },
+            { question: "Apa yang dimaksud dengan 'Filter Bubble' (Gelembung Filter) di internet?", options: ["Gelembung sabun yang muncul di layar monitor.", "Keadaan di mana pengguna hanya melihat informasi atau opini yang sejalan dengan pandangannya sendiri akibat algoritma pencarian.", "Filter untuk memurnikan air minum.", "Program untuk menyaring virus."], answer: "Keadaan di mana pengguna hanya melihat informasi atau opini yang sejalan dengan pandangannya sendiri akibat algoritma pencarian." },
+            { question: "Bagaimana teknologi membantu dalam penanggulangan bencana?", options: ["Sistem peringatan dini, pemetaan wilayah terdampak, dan koordinasi bantuan.", "Mencegah terjadinya bencana alam sepenuhnya.", "Hanya digunakan untuk menyebarkan berita palsu tentang bencana.", "Membuat bencana menjadi lebih parah."], answer: "Sistem peringatan dini, pemetaan wilayah terdampak, dan koordinasi bantuan." },
+            { question: "Apa itu 'Crowdsourcing'?", options: ["Mengumpulkan banyak orang di satu tempat.", "Memperoleh layanan, ide, atau konten dengan meminta kontribusi dari sekelompok besar orang, terutama komunitas online.", "Menjual barang kepada kerumunan orang.", "Mengusir orang dari suatu acara."], answer: "Memperoleh layanan, ide, atau konten dengan meminta kontribusi dari sekelompok besar orang, terutama komunitas online." },
+            { question: "Apa peran dari 'Cookie' dalam browser web?", options: ["Makanan ringan untuk pengguna internet.", "File kecil yang disimpan di komputer pengguna oleh situs web untuk mengingat informasi dan preferensi pengguna.", "Program jahat yang mencuri data.", "Situs web tempat membeli kue."], answer: "File kecil yang disimpan di komputer pengguna oleh situs web untuk mengingat informasi dan preferensi pengguna." },
+            { question: "Apa tujuan utama dari 'Two-Factor Authentication' (Autentikasi Dua Faktor)?", options: ["Mengharuskan pengguna memasukkan password dua kali.", "Menambah lapisan keamanan dengan mengharuskan dua bentuk verifikasi identitas (misal: password dan kode OTP).", "Membuat proses login menjadi lebih cepat.", "Menghapus kebutuhan akan password."], answer: "Menambah lapisan keamanan dengan mengharuskan dua bentuk verifikasi identitas (misal: password dan kode OTP)." },
+            { question: "Apa dampak positif dari teknologi komputer terhadap pelestarian budaya?", options: ["Menghancurkan artefak budaya.", "Memungkinkan digitalisasi arsip, museum virtual, dan pelestarian bahasa yang terancam punah.", "Membuat orang lupa akan budayanya sendiri.", "Membatasi akses informasi tentang budaya lokal."], answer: "Memungkinkan digitalisasi arsip, museum virtual, dan pelestarian bahasa yang terancam punah." },
+            { question: "Dalam dunia kerja masa depan, kemampuan (skill) apa yang diprediksi akan sangat dibutuhkan akibat perkembangan AI?", options: ["Kemampuan melakukan tugas berulang dengan cepat.", "Kreativitas, pemecahan masalah kompleks, dan kecerdasan emosional.", "Hanya kemampuan fisik.", "Kemampuan mengetik dengan lambat."], answer: "Kreativitas, pemecahan masalah kompleks, dan kecerdasan emosional." },
+            { question: "Apa itu 'Telemedicine'?", options: ["Menonton program kesehatan di televisi.", "Penggunaan teknologi telekomunikasi untuk memberikan layanan medis jarak jauh.", "Obat-obatan yang dibeli di apotek.", "Alat medis yang digunakan di rumah sakit."], answer: "Penggunaan teknologi telekomunikasi untuk memberikan layanan medis jarak jauh." },
+            { question: "Apa fungsi dari 'VPN' (Virtual Private Network)?", options: ["Membuat jaringan internet baru.", "Menciptakan koneksi internet yang aman dan terenkripsi atas jaringan publik yang kurang aman.", "Memperlambat koneksi internet secara sengaja.", "Membuka semua blokir situs web secara permanen tanpa keamanan."], answer: "Menciptakan koneksi internet yang aman dan terenkripsi atas jaringan publik yang kurang aman." },
+            { question: "Fenomena di mana seseorang bekerja dari mana saja di dunia asalkan memiliki koneksi internet disebut:", options: ["Digital Nomad", "Workaholic", "Unemployed", "Freelancer"], answer: "Digital Nomad" },
+            { question: "Apa keuntungan menggunakan teknologi biometrik (seperti sidik jari atau pengenalan wajah) untuk keamanan?", options: ["Mudah dipalsukan dan ditebak.", "Sulit dipalsukan dan memberikan keamanan yang lebih tinggi dibandingkan kata sandi biasa.", "Bisa dibagikan dengan mudah ke orang lain.", "Seringkali salah mengidentifikasi orang."], answer: "Sulit dipalsukan dan memberikan keamanan yang lebih tinggi dibandingkan kata sandi biasa." },
+            { question: "Apa itu 'Smart City' (Kota Pintar)?", options: ["Kota yang penduduknya pintar-pintar.", "Kota yang menggunakan teknologi informasi dan komunikasi untuk meningkatkan efisiensi layanan publik dan kesejahteraan warga.", "Kota yang melarang penggunaan komputer.", "Kota yang tidak memiliki masalah kemacetan."], answer: "Kota yang menggunakan teknologi informasi dan komunikasi untuk meningkatkan efisiensi layanan publik dan kesejahteraan warga." },
+            { question: "Apa yang dimaksud dengan 'Software Piracy' (Pembajakan Perangkat Lunak)?", options: ["Menggunakan perangkat lunak open-source.", "Penyalinan, distribusi, atau penggunaan perangkat lunak secara ilegal tanpa izin dari pemegang hak cipta.", "Membeli perangkat lunak dengan harga diskon.", "Meminjamkan komputer ke teman."], answer: "Penyalinan, distribusi, atau penggunaan perangkat lunak secara ilegal tanpa izin dari pemegang hak cipta." },
+            { question: "Bagaimana teknologi e-banking memudahkan nasabah?", options: ["Mengharuskan nasabah untuk selalu datang ke bank.", "Memungkinkan nasabah melakukan transaksi perbankan kapan saja dan di mana saja melalui internet.", "Membatasi jumlah transaksi yang bisa dilakukan dalam sehari.", "Membuat biaya transaksi menjadi lebih mahal."], answer: "Memungkinkan nasabah melakukan transaksi perbankan kapan saja dan di mana saja melalui internet." }
+        ];
+
+        // State Variabel
+        let user = null;
+        let currentQuestionIndex = 0;
+        let answers = new Array(questions.length).fill(null);
+
+        // Referensi DOM Element
+        const loginView = document.getElementById('login-view');
+        const examView = document.getElementById('exam-view');
+        const resultView = document.getElementById('result-view');
+        const loginForm = document.getElementById('login-form');
+        const confirmModal = document.getElementById('confirm-modal');
+
+        // Event Listener Login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah halaman refresh
+            
+            const nama = document.getElementById('nama').value;
+            const nim = document.getElementById('nim').value;
+            const kelas = document.getElementById('kelas').value;
+
+            user = { nama, nim, kelas };
+            
+            // Setel info di header
+            document.getElementById('header-user-name').innerText = `${user.nama} (${user.nim})`;
+            document.getElementById('header-user-class').innerText = `Kelas: ${user.kelas}`;
+            
+            // Sembunyikan login, tampilkan ujian
+            loginView.classList.add('hidden');
+            examView.classList.remove('hidden');
+            
+            renderQuestion();
+            renderNavigator();
+        });
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            
+            // Update teks soal
+            document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${q.question}`;
+            
+            // Update Progress Bar
+            const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').innerText = `Soal ${currentQuestionIndex + 1} dari ${questions.length}`;
+
+            // Render Opsi Jawaban
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = ''; // Kosongkan opsi sebelumnya
+
+            q.options.forEach((option) => {
+                const isSelected = answers[currentQuestionIndex] === option;
+                
+                // Membuat elemen div untuk setiap opsi
+                const optionDiv = document.createElement('div');
+                optionDiv.className = `p-4 border rounded-lg cursor-pointer transition-colors duration-200 flex items-center ${
+                    isSelected 
+                        ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' 
+                        : 'border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                }`;
+                
+                // Menambahkan event onclick untuk memilih jawaban
+                optionDiv.onclick = () => selectAnswer(option);
+
+                // Lingkaran indikator radio button kustom
+                const circleDiv = document.createElement('div');
+                circleDiv.className = `w-5 h-5 rounded-full border mr-3 flex items-center justify-center ${
+                    isSelected ? 'border-blue-500' : 'border-gray-300'
+                }`;
+                
+                if (isSelected) {
+                    const innerCircle = document.createElement('div');
+                    innerCircle.className = 'w-2.5 h-2.5 bg-blue-500 rounded-full';
+                    circleDiv.appendChild(innerCircle);
+                }
+
+                const textSpan = document.createElement('span');
+                textSpan.className = 'text-gray-700';
+                textSpan.innerText = option;
+
+                optionDiv.appendChild(circleDiv);
+                optionDiv.appendChild(textSpan);
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            // Mengatur Tombol Navigasi
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            const btnSubmit = document.getElementById('btn-submit');
+
+            btnPrev.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === questions.length - 1) {
+                btnNext.classList.add('hidden');
+                btnSubmit.classList.remove('hidden');
+            } else {
+                btnNext.classList.remove('hidden');
+                btnSubmit.classList.add('hidden');
+            }
+        }
+
+        function selectAnswer(option) {
+            answers[currentQuestionIndex] = option;
+            renderQuestion(); // Render ulang opsi untuk update warna terpilih
+            renderNavigator(); // Update kotak di sidebar menjadi "sudah dijawab"
+        }
+
+        document.getElementById('btn-prev').addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+                renderNavigator();
+            }
+        });
+
+        document.getElementById('btn-next').addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+                renderNavigator();
+            }
+        });
+
+        function renderNavigator() {
+            const navGrid = document.getElementById('navigator-grid');
+            navGrid.innerHTML = ''; // Bersihkan kontainer
+
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.createElement('button');
+                const isAnswered = answers[i] !== null;
+                const isCurrent = currentQuestionIndex === i;
+
+                // Tentukan kelas CSS (Warna biru jika dijawab, abu-abu jika belum)
+                let classNames = 'w-10 h-10 flex items-center justify-center rounded text-sm font-medium transition-colors ';
+                if (isCurrent) classNames += 'ring-2 ring-offset-1 ring-blue-500 ';
+                
+                if (isAnswered) {
+                    classNames += 'bg-blue-100 text-blue-800 border border-blue-200';
+                } else {
+                    classNames += 'bg-gray-100 text-gray-500 border border-gray-200 hover:bg-gray-200';
+                }
+
+                btn.className = classNames;
+                btn.innerText = i + 1;
+                
+                // Event click untuk lompat ke nomor soal tersebut
+                btn.onclick = () => {
+                    currentQuestionIndex = i;
+                    renderQuestion();
+                    renderNavigator();
+                };
+
+                navGrid.appendChild(btn);
+            }
+        }
+
+        // Logika Modal Konfirmasi dan Submit
+        document.getElementById('btn-submit').addEventListener('click', () => {
+            confirmModal.classList.remove('hidden'); // Tampilkan Modal
+        });
+
+        document.getElementById('modal-cancel').addEventListener('click', () => {
+            confirmModal.classList.add('hidden'); // Sembunyikan Modal
+        });
+
+        document.getElementById('modal-confirm').addEventListener('click', () => {
+            confirmModal.classList.add('hidden');
+            finishExam();
+        });
+
+        function finishExam() {
+            let score = 0;
+            let correctCount = 0;
+
+            // Hitung jawaban yang benar
+            answers.forEach((ans, idx) => {
+                if (ans === questions[idx].answer) {
+                    correctCount++;
+                }
+            });
+
+            // Hitung skala 100
+            score = (correctCount / questions.length) * 100;
+
+            // Set data di View Hasil
+            document.getElementById('res-nama').innerText = user.nama;
+            document.getElementById('res-nim').innerText = user.nim;
+            document.getElementById('res-kelas').innerText = user.kelas;
+            document.getElementById('res-score').innerText = Math.round(score);
+            document.getElementById('res-detail').innerText = `(${correctCount} benar dari ${questions.length} soal)`;
+
+            // Pindah View
+            examView.classList.add('hidden');
+            resultView.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
